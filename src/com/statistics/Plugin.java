@@ -1,7 +1,6 @@
 package com.statistics;
 
 import org.bukkit.plugin.java.JavaPlugin;
-
 import com.statistics.commands.TestCommand;
 import com.statistics.events.PlayerJoined;
 
