@@ -1,39 +1,41 @@
 package com.statistics;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import java.util.UUID;
+
+import org.bson.Document;
+
+import com.mongodb.client.MongoClient;
 
 public class Database {
-	private static String url;
+	private static MongoCollection<Document> players;
+	private static MongoDatabase db;
+	private static MongoClient client;
 
-	static Connection connection;
+	// Default port: 27017
+	public static void create(String ip, int port) {
+		//create(null, null, ip, port);
+		client = MongoClients.create("mongodb://" + ip + ":" + port);
 
-	public static void InitDatabase(String ip, int port, String servername, String username, String password) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.err.println("JDBC driver unavailable!");
-			return;
-		}
-
-		url = "jdbc:mysql:" + ip + ":" + port + "/" + servername;
-
-		try {
-			connection = DriverManager.getConnection(url, username, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		db = client.getDatabase("commonstatistics");
+		players = db.getCollection("players");
 	}
 
-	public static void DisableDatabase() {
-		try {
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public static void create(String username, String password, String ip, int port) {
+		client = MongoClients.create((username.equals(null) || password.equals(null))
+				? ("mongodb://" + username + ":" + password + "@" + ip + ":" + port)
+				: ("mongodb://" + ip + ":" + port));
+
+		db = client.getDatabase("commonstatistics");
+		players = db.getCollection("players");
+	}
+
+	public static void storePlayer(UUID uuid, String name) {
+		Document obj = new Document("uuid", uuid);
+		obj.put("name", name);
+		players.insertOne(obj);
 	}
 }

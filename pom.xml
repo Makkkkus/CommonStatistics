@@ -6,7 +6,16 @@
 	<artifactId>CommonStatistics</artifactId>
 	<version>0.0.1</version>
 	<build>
+		<defaultGoal>install</defaultGoal>
 		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<includes>
+					<include>*</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -14,7 +23,30 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<release>${release}</release>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mongodb</groupId>
+							<artifactId>mongodb-driver-sync</artifactId>
+							<version>3.12.1</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.2</version>
+				<configuration>
+					<shadedArtifactAttached>true</shadedArtifactAttached>
+					<shadedClassifierName>shaded</shadedClassifierName>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -27,6 +59,10 @@
 			<id>bungeecord-repo</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 
@@ -37,9 +73,10 @@
 			<version>1.14.4-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.48</version>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver-sync</artifactId>
+			<version>3.12.1</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

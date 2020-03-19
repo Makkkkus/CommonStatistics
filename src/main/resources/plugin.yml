@@ -1,0 +1,14 @@
+main: com.statistics.Plugin
+name: CommonStatistics
+version: 0.0.1
+author: Makkkkus
+description: "Saves player statistics that everyone can access. The goal is to be used by major servers to generate a player score."
+api-version: 1.14
+commands:
+  test:
+    description: "Test command"
+    usage: "Usage: /<command> [arg1|arg2]"
+    permission: commonstatistics.test
+permissions:
+  commonstatistics.test:
+    default: op

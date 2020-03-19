@@ -9,16 +9,14 @@ public class Plugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		Database.InitDatabase("127.0.0.1", 3306, "CommonStatistics", "root", "");
-
+		Database.create("localhost", 27017);
 		this.getCommand("test").setExecutor(new TestCommand());
 		getServer().getPluginManager().registerEvents(new PlayerJoined(), this);
-
 	}
 
 	@Override
 	public void onDisable() {
-		Database.DisableDatabase();
+
 	}
 
 }
