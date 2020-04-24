@@ -17,17 +17,13 @@ public class Database {
 
 	// Default port: 27017
 	public static void create(String ip, int port) {
-		//create(null, null, ip, port);
-		client = MongoClients.create("mongodb://" + ip + ":" + port);
-
-		db = client.getDatabase("commonstatistics");
-		players = db.getCollection("players");
+		create("", "", ip, port);
 	}
 
 	public static void create(String username, String password, String ip, int port) {
-		client = MongoClients.create((username.equals(null) || password.equals(null))
-				? ("mongodb://" + username + ":" + password + "@" + ip + ":" + port)
-				: ("mongodb://" + ip + ":" + port));
+		client = MongoClients.create((username.equals("") || password.equals(""))
+				? ("mongodb://" + ip + ":" + port)
+				: ("mongodb://" + username + ":" + password + "@" + ip + ":" + port));
 
 		db = client.getDatabase("commonstatistics");
 		players = db.getCollection("players");
@@ -37,5 +33,16 @@ public class Database {
 		Document obj = new Document("uuid", uuid);
 		obj.put("name", name);
 		players.insertOne(obj);
+	}
+
+	public static Document readPlayer(UUID uuid) {
+		Document r = new Document("uuid", uuid);
+        return (Document) players.find(r);
+    }
+
+	public static void updatePlayer(UUID uuid, String name) {
+		Document obj = new Document("uuid", uuid);
+		obj.put("name", name);
+		players.findOneAndReplace(readPlayer(uuid), obj);
 	}
 }
